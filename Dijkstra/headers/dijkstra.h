@@ -1,5 +1,5 @@
-#ifndef dejkstra_h
-#define dejkstra_h
+#ifndef DIJKSTRA_H
+#define DIJKSTRA_H
 
 #include "graph.h"
 #include "way.h"

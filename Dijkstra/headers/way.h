@@ -1,5 +1,5 @@
-#ifndef way_h
-#define way_h
+#ifndef WAY_H
+#define WAY_H
 
 #include "node.h"
 

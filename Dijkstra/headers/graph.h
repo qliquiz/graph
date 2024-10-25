@@ -1,5 +1,5 @@
-#ifndef graph_h
-#define graph_h
+#ifndef GRAPH_H
+#define GRAPH_H
 
 #include "node.h"
 

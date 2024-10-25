@@ -32,10 +32,16 @@ Graph::~Graph()
 
 void Graph::show() const
 {
+    std::cout << "Graph:\n" << std::endl;
+
     for (auto it = nodes.begin(); it != nodes.end(); ++it) {
         std::cout << (*it)->getName() << '\t';
+
         for (auto neighIt = (*it)->getNeighbours().begin(); neighIt != (*it)->getNeighbours().end(); ++neighIt)
             std::cout << neighIt->first->getName() << '-' << neighIt->second << ' ';
+        
         std::cout << '\n' << std::endl;
     }
+    
+    std::cout << "----------------------------------------------------------------------\n" << std::endl;
 }

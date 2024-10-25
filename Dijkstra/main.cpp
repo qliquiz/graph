@@ -1,11 +1,14 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <stdexcept>
 
+#include "headers/ant.h"
 #include "headers/graph.h"
 #include "headers/dijkstra.h"
 
-Node* take(const std::variant<Node*, std::monostate> v) {
+// like 'typedef' or 'using'
+Node* take(const std::variant<Node*, std::monostate> v)
+{
     if (std::holds_alternative<Node*>(v)) return std::get<Node*>(v);
     throw std::bad_variant_access();
 }
@@ -14,7 +17,7 @@ int main(int argc, char* argv[])
 {
     Graph graph;
     
-    
+    // Filling the graph
     std::ifstream inputFile(argv[1]);
     if (!inputFile.is_open())
     {
@@ -36,6 +39,8 @@ int main(int argc, char* argv[])
     
     inputFile.close();
     
+    // Graph testing
+    std::cout << "[Graph testing]\n" << std::endl;
     
     Node* d = new Node('d');
     graph.addNode(d);
@@ -60,13 +65,31 @@ int main(int argc, char* argv[])
     
     graph.show();
     
-    
-    Dijkstra dijkstra(graph);
-    Way way = dijkstra.shortestWay('c', 'd');
+    // Dijkstra
+    std::cout << "[Dijkstra]\n" << std::endl;
 
-    std::cout << "shortest path: ";
-    for (Node* node : way.nodes) std::cout << node->getName() << " ";
-    std::cout << "\nlength: " << way.length << '\n' << std::endl;
+    Dijkstra dijkstra(graph);
+    Way way1 = dijkstra.shortestWay('c', 'd');
+
+    std::cout << "shortest path found by Dijkstra: ";
+    for (Node* node : way1.nodes) std::cout << node->getName() << " ";
+    std::cout << "\nlength: " << way1.length << '\n' << std::endl;
+    std::cout << "----------------------------------------------------------------------\n" << std::endl;
     
+    // Ants
+    std::cout << "[Ants]\n" << std::endl;
+
+    AntColony colony(graph, 1.0, 2.0, 0.1, 100.0, 10, 100);
+    auto [way2, lengths] = colony.shortestWay('c', 'd');
+
+    std::ofstream file("of.txt");
+    for (size_t i = 0; i < lengths.size(); ++i) file << i << " " << lengths[i] << std::endl;
+    file.close();
+
+    std::cout << "shortest path found by ACO: ";
+    for (Node* node : way2.nodes) std::cout << node->getName() << " ";
+    std::cout << "\nlength: " << way2.length << '\n' << std::endl;
+    std::cout << "----------------------------------------------------------------------\n" << std::endl;
+
     return 0;
 }
