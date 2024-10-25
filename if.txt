@@ -1,0 +1,15 @@
+a b 3
+a d 6
+a f 9
+b c 2
+b e 5
+c d 1
+c g 7
+d e 2
+d h 3
+e f 8
+e i 4
+f j 3
+g h 6
+h i 1
+i j 2

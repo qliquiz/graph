@@ -42,15 +42,15 @@ int main(int argc, char* argv[])
     // Graph testing
     std::cout << "[Graph testing]\n" << std::endl;
     
-    Node* d = new Node('d');
-    graph.addNode(d);
-    d->addNeighbour(take(graph['c']), 4);
-    (*d).addNeighbour(take(graph['a']), 5);
+    Node* x = new Node('x');
+    graph.addNode(x);
+    x->addNeighbour(take(graph['x']), 4);
+    (*x).addNeighbour(take(graph['a']), 5);
     
-    Node* e = new Node('e');
-    graph.addNode(e);
-    e->addNeighbour(d, 1);
-    (*e).addNeighbour(take(graph['b']), 8);
+    Node* y = new Node('y');
+    graph.addNode(y);
+    y->addNeighbour(x, 1);
+    (*y).addNeighbour(take(graph['b']), 8);
     
     graph.show();
     
@@ -60,8 +60,8 @@ int main(int argc, char* argv[])
     graph.show();
     
     graph.removeNode(take(graph['b']));
-    graph.removeEdge(d, take(graph['c']));
-    take(graph['a'])->addNeighbour(e, 6);
+    graph.removeEdge(x, take(graph['c']));
+    take(graph['a'])->addNeighbour(y, 6);
     
     graph.show();
     
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
     std::cout << "[Dijkstra]\n" << std::endl;
 
     Dijkstra dijkstra(graph);
-    Way way1 = dijkstra.shortestWay('c', 'd');
+    Way way1 = dijkstra.shortestWay('a', 'j');
 
     std::cout << "shortest path found by Dijkstra: ";
     for (Node* node : way1.nodes) std::cout << node->getName() << " ";
@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
     std::cout << "[Ants]\n" << std::endl;
 
     AntColony colony(graph, 1.0, 2.0, 0.1, 100.0, 10, 100);
-    auto [way2, lengths] = colony.shortestWay('c', 'd');
+    auto [way2, lengths] = colony.shortestWay('a', 'j');
 
     std::ofstream file("of.txt");
     for (size_t i = 0; i < lengths.size(); ++i) file << i << " " << lengths[i] << std::endl;
