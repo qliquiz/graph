@@ -10,12 +10,12 @@
 
 class Node
 {
-    const char name;
+    const std::string name;
     std::set<std::pair<Node*, size_t>> neighbours;
 public:
-    Node(const char& aname) : name(aname) {}
+    Node(const std::string& aname) : name(aname) {}
 
-    const char& getName() const { return name; }
+    const std::string& getName() const { return name; }
     const std::set<std::pair<Node*, size_t>>& getNeighbours() const { return neighbours; }
 
     void addNeighbour(Node* neighbour, size_t weight) { neighbours.insert(std::make_pair(neighbour, weight)); }

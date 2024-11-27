@@ -1,31 +1,43 @@
 #include "../headers/ant.h"
 
-double AntColony::probability(Node* current, Node* next)
+double AntColony::probability(Node *current, Node *next)
 {
-    double tau = pheromones[{current, next}];  // уровень феромонов
-    double eta = 1.0 / next->getNeighbours().size(); // эвристика, обратная расстоянию или числу соседей
+    auto neighbours = current->getNeighbours();
+    auto edge_it = std::find_if(
+        neighbours.begin(),
+        neighbours.end(),
+        [next](const auto &pair)
+        { return pair.first == next; });
+
+    if (edge_it == neighbours.end())
+        return 0.0;
+
+    double tau = pheromones[{current, next}]; // уровень феромонов
+    double eta = 1.0 / edge_it->second;       // обратное значение веса ребра
 
     return pow(tau, alpha) * pow(eta, beta);
 }
 
-void AntColony::updatePheromones(const Way& way)
+void AntColony::updatePheromones(const Way &way)
 {
+    // глобальное обновление феромонов
+    for (auto &[edge, pheromone] : pheromones)
+        pheromone *= (1 - evaporation_rate); // испарение
+
+    // локальное обновление для лучшего пути
+    double Q = pheromone_intensity;
     for (size_t i = 0; i < way.nodes.size() - 1; ++i)
     {
-        Node* current = way.nodes[i];
-        Node* next = way.nodes[i + 1];
-        pheromones[{current, next}] += pheromone_intensity / way.length;
+        Node *current = way.nodes[i];
+        Node *next = way.nodes[i + 1];
+        pheromones[{current, next}] += Q / way.length;
     }
-    // Испарение феромонов
-    for (auto& [edge, pheromone] : pheromones)
-        pheromone *= (1 - evaporation_rate);
 }
 
-
-std::pair<Way, std::vector<int>> AntColony::shortestWay(char departure, char target)
+std::pair<Way, std::vector<int>> AntColony::shortestWay(const std::string departure, const std::string target)
 {
-    Node* start = std::get<Node*>(graph[departure]);
-    Node* end = std::get<Node*>(graph[target]);
+    Node *start = std::get<Node *>(graph[departure]);
+    Node *end = std::get<Node *>(graph[target]);
 
     Way best_way;
     std::vector<int> best_lengths_per_iteration; // вектор для хранения длин оптимальных путей
@@ -34,7 +46,7 @@ std::pair<Way, std::vector<int>> AntColony::shortestWay(char departure, char tar
     {
         for (size_t ant = 0; ant < ant_count; ++ant)
         {
-            Node* current = start;
+            Node *current = start;
             Way way;
             int distance = 0;
             bool valid_path = true;
@@ -43,22 +55,24 @@ std::pair<Way, std::vector<int>> AntColony::shortestWay(char departure, char tar
             {
                 way.nodes.push_back(current);
 
-                if (current->getNeighbours().empty() && current != end) {
+                if (current->getNeighbours().empty() && current != end)
+                {
                     valid_path = false;
                     break;
                 }
 
-                std::vector<std::pair<Node*, double>> probabilities;
+                std::vector<std::pair<Node *, double>> probabilities;
                 double total_prob = 0;
 
-                for (const auto& neighbour : current->getNeighbours())
+                for (const auto &neighbour : current->getNeighbours())
                 {
                     double prob = probability(current, neighbour.first);
                     probabilities.push_back({neighbour.first, prob});
                     total_prob += prob;
                 }
 
-                if (total_prob == 0) {
+                if (total_prob == 0)
+                {
                     valid_path = false;
                     break;
                 }
@@ -69,18 +83,19 @@ std::pair<Way, std::vector<int>> AntColony::shortestWay(char departure, char tar
 
                 double rand_prob = dis(gen);
                 double cumulative_prob = 0;
-                Node* next = nullptr;
+                Node *next = nullptr;
                 size_t edge_weight = 0;
 
-                for (const auto& p : probabilities)
+                for (const auto &p : probabilities)
                 {
                     cumulative_prob += p.second;
                     if (rand_prob <= cumulative_prob)
                     {
                         next = p.first;
-                        for (const auto& neighbour : current->getNeighbours())
+                        for (const auto &neighbour : current->getNeighbours())
                         {
-                            if (neighbour.first == next) {
+                            if (neighbour.first == next)
+                            {
                                 edge_weight = neighbour.second;
                                 break;
                             }
@@ -90,7 +105,8 @@ std::pair<Way, std::vector<int>> AntColony::shortestWay(char departure, char tar
                     }
                 }
 
-                if (next == nullptr) {
+                if (next == nullptr)
+                {
                     valid_path = false;
                     break;
                 }
@@ -103,9 +119,8 @@ std::pair<Way, std::vector<int>> AntColony::shortestWay(char departure, char tar
                 way.nodes.push_back(end);
                 way.length = distance;
 
-                if (way.length < best_way.length) {
+                if (best_way.nodes.empty() || way.length < best_way.length)
                     best_way = way;
-                }
 
                 updatePheromones(way);
             }
@@ -115,4 +130,9 @@ std::pair<Way, std::vector<int>> AntColony::shortestWay(char departure, char tar
     }
 
     return {best_way, best_lengths_per_iteration}; // возвращаем лучший путь и длины на каждой итерации
+}
+
+const std::map<std::pair<Node*, Node*>, double>& AntColony::getPheromoneLevels() const
+{
+    return pheromones;
 }

@@ -1,7 +1,7 @@
 #include "../headers/dijkstra.h"
 #include "../headers/node.h"
 
-Way Dijkstra::shortestWay(char departure, char target)
+Way Dijkstra::shortestWay(std::string departure, std::string target)
 {
     Node* begin = std::get<Node*>(graph[departure]);
     Node* end = std::get<Node*>(graph[target]);

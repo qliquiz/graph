@@ -16,5 +16,5 @@ void Node::removeNeighbour(Node* neighbour)
 void Node::clearNeighbours()
 {
     neighbours.clear();
-    std::cout << "neighbours of node " << this->name << " are cleared" << '\n' << std::endl;
+    // std::cout << "neighbours of node " << this->name << " are cleared" << '\n' << std::endl;
 }

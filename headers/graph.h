@@ -17,7 +17,7 @@ public:
 
     const std::set<Node*>& getNodes() const { return nodes; }
     
-    std::variant<Node*, std::monostate> operator[](const char l) const;
+    std::variant<Node*, std::monostate> operator[](const std::string l) const;
 };
 
 #endif

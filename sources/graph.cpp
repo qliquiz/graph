@@ -11,7 +11,7 @@ void Graph::removeNode(Node* node)
     }
 }
 
-std::variant<Node*, std::monostate> Graph::operator[](const char l) const
+std::variant<Node*, std::monostate> Graph::operator[](const std::string l) const
 {
     for (auto it = nodes.begin(); it != nodes.end(); ++it) if ((*it)->getName() == l) return *it;
     
@@ -27,7 +27,7 @@ Graph::~Graph()
     }
     
     nodes.clear();
-    std::cout << "the graph is destroyed" << std::endl;
+    // std::cout << "the graph is destroyed" << std::endl;
 }
 
 void Graph::show() const

@@ -9,7 +9,7 @@ class Dijkstra
     const Graph& graph;
 public:
     Dijkstra(const Graph& agraph) : graph(agraph) {}
-    Way shortestWay(char departure, char target);
+    Way shortestWay(std::string departure, std::string target);
 };
 
 #endif
