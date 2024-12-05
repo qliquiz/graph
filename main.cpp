@@ -5,7 +5,6 @@
 #include "headers/ant.h"
 #include "headers/graph.h"
 #include "headers/dijkstra.h"
-#include "visualize.cpp"
 
 // like 'typedef' or 'using'
 Node* take(const std::variant<Node*, std::monostate> v)
@@ -80,7 +79,7 @@ int main(int argc, char* argv[])
     // Ants
     std::cout << "[Ants]\n" << std::endl;
 
-    AntColony colony(graph, 1.0, 2.0, 0.1, 100.0, 10, 100);
+    AntColony colony(graph, 1.0, 2.0, 0.1, 100.0, 10, 10000);
     auto [way2, lengths] = colony.shortestWay("0", "874");
 
     std::ofstream file("of.txt");
@@ -90,10 +89,6 @@ int main(int argc, char* argv[])
     std::cout << "shortest path found by ACO: ";
     for (Node* node : way2.nodes) std::cout << node->getName() << " ";
     std::cout << "\nlength: " << way2.length << '\n' << std::endl;
-
-    // Visualization
-    std::map<std::pair<Node*, Node*>, double> pheromones = colony.getPheromoneLevels();
-    visualize(graph, pheromones, way2);
 
     return 0;
 }
