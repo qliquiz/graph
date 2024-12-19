@@ -2,9 +2,9 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "headers/ant.h"
 #include "headers/graph.h"
 #include "headers/dijkstra.h"
+#include "sources/ant2.cpp"
 
 // like 'typedef' or 'using'
 Node* take(const std::variant<Node*, std::monostate> v)
@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
     // Ants
     std::cout << "[Ants]\n" << std::endl;
 
-    AntColony colony(graph, 1.0, 2.0, 0.1, 100.0, 10, 10000);
+    AntColony colony(graph, 1.0, 2.0, 0.1, 100.0, 20, 100);
     auto [way2, lengths] = colony.shortestWay("0", "874");
 
     std::ofstream file("of.txt");
