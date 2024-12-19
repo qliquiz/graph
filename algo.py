@@ -12,31 +12,31 @@ class AntColony:
         self.beta = beta    # влияние расстояния
         
     def build_graph(self, filename):
-      # Читаем данные из файла и строим граф
-      edges = defaultdict(dict)
-      max_vertex = 0  # Добавляем отслеживание максимального номера вершины
-      
-      with open(filename, 'r') as f:
-          for line in f:
-              v1, v2, weight = map(int, line.strip().split())
-              edges[v1][v2] = weight
-              edges[v2][v1] = weight
-              max_vertex = max(max_vertex, v1, v2)  # Обновляем максимальный номер вершины
-      
-      # Создаем матрицу расстояний с размером (max_vertex + 1) × (max_vertex + 1)
-      n = max_vertex + 1
-      distances = np.full((n, n), float('inf'))
-      
-      # Заполняем известные расстояния
-      for v1 in edges:
-          for v2, weight in edges[v1].items():
-              distances[v1][v2] = weight
-      
-      # Достраиваем граф до полного, используя большие веса для отсутствующих ребер
-      max_weight = np.max(distances[distances != float('inf')]) * 10
-      distances[distances == float('inf')] = max_weight
-      
-      return distances
+        # Читаем данные из файла и строим граф
+        edges = defaultdict(dict)
+        max_vertex = 0  # Добавляем отслеживание максимального номера вершины
+        
+        with open(filename, 'r') as f:
+            for line in f:
+                v1, v2, weight = map(int, line.strip().split())
+                edges[v1][v2] = weight
+                edges[v2][v1] = weight
+                max_vertex = max(max_vertex, v1, v2)  # Обновляем максимальный номер вершины
+
+        # Создаем матрицу расстояний с размером (max_vertex + 1) × (max_vertex + 1)
+        n = max_vertex + 1
+        distances = np.full((n, n), float('inf'))
+        
+        # Заполняем известные расстояния
+        for v1 in edges:
+            for v2, weight in edges[v1].items():
+                distances[v1][v2] = weight
+        
+        # Достраиваем граф до полного, используя большие веса для отсутствующих ребер
+        max_weight = np.max(distances[distances != float('inf')]) * 10
+        distances[distances == float('inf')] = max_weight
+        
+        return distances
         
     def solve(self, distances):
         n_cities = len(distances)
@@ -116,7 +116,6 @@ class AntColony:
         length = 0
         for i in range(len(path)):
             length += distances[path[i]][path[(i+1)%len(path)]]
-        print(length)
         return length
     
     def update_pheromone(self, pheromone, paths, distances):
@@ -137,24 +136,21 @@ class AntColony:
 def plot_convergence(lengths):
     plt.figure(figsize=(10, 6))
     plt.plot(lengths)
-    plt.title('Convergence of Ant Colony Optimization')
-    plt.xlabel('Iteration')
-    plt.ylabel('Path Length')
+    plt.title('Оптимизация пути')
+    plt.xlabel('Итерация')
+    plt.ylabel('Длина пути')
     plt.grid(True)
     plt.savefig('convergence.png')
     plt.close()
 
-# Параметры алгоритма
 n_ants = 20
 n_iterations = 100
 decay = 0.1
 alpha = 1
 beta = 2
 
-# Очищаем файл с результатами
 open('of.txt', 'w').close()
 
-# Создаем экземпляр класса и решаем задачу
 aco = AntColony(n_ants, n_iterations, decay, alpha, beta)
 distances = aco.build_graph('if.txt')
 best_path, best_length, all_lengths = aco.solve(distances)
@@ -162,5 +158,4 @@ best_path, best_length, all_lengths = aco.solve(distances)
 print(f"Best path length: {best_length}")
 print(f"Best path: {best_path}")
 
-# Строим график сходимости
 plot_convergence(all_lengths)

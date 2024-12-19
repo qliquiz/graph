@@ -1,13 +1,14 @@
 import matplotlib.pyplot as plt
 
+iter = 0
 iterations = []
 lengths = []
 
 with open('of.txt', 'r') as file:
     for line in file:
-        iter_num, path_length = map(int, line.split())
-        iterations.append(iter_num)
-        lengths.append(path_length)
+        iter += 1
+        iterations.append(iter)
+        lengths.append(int(line))
 
 plt.figure(figsize=(10, 6))
 plt.plot(iterations, lengths, marker='o')
