@@ -31,17 +31,14 @@ public:
     int v1, v2, weight;
     int max_vertex = 0;
 
-    // Первый проход для определения размера матрицы
     while (file >> v1 >> v2 >> weight)
     {
       max_vertex = std::max(max_vertex, std::max(v1, v2));
     }
 
-    // Создаем матрицу расстояний
     int n = max_vertex + 1;
     std::vector<std::vector<double>> distances(n, std::vector<double>(n, std::numeric_limits<double>::infinity()));
 
-    // Второй проход для заполнения матрицы
     file.clear();
     file.seekg(0);
     while (file >> v1 >> v2 >> weight)
@@ -50,7 +47,6 @@ public:
       distances[v2][v1] = weight;
     }
 
-    // Заполняем отсутствующие рёбра большими весами
     double max_weight = 0;
     for (const auto &row : distances)
     {
@@ -157,7 +153,6 @@ public:
                                                     const std::vector<std::vector<int>> &paths,
                                                     const std::vector<std::vector<double>> &distances)
   {
-    // Испарение феромона
     for (auto &row : pheromone)
     {
       for (double &p : row)
@@ -166,7 +161,6 @@ public:
       }
     }
 
-    // Добавление нового феромона
     for (const auto &path : paths)
     {
       double path_length = calculate_path_length(path, distances);
@@ -178,7 +172,7 @@ public:
         pheromone[next][current] += 1.0 / path_length;
       }
     }
-
+  
     return pheromone;
   }
 
