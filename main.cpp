@@ -4,7 +4,6 @@
 
 #include "headers/graph.h"
 #include "headers/dijkstra.h"
-#include "sources/ant2.cpp"
 
 // like 'typedef' or 'using'
 Node* take(const std::variant<Node*, std::monostate> v)
@@ -75,20 +74,6 @@ int main(int argc, char* argv[])
     for (Node* node : way1.nodes) std::cout << node->getName() << " ";
     std::cout << "\nlength: " << way1.length << '\n' << std::endl;
     std::cout << "----------------------------------------------------------------------\n" << std::endl;
-    
-    // Ants
-    std::cout << "[Ants]\n" << std::endl;
-
-    AntColony colony(graph, 1.0, 2.0, 0.1, 100.0, 20, 100);
-    auto [way2, lengths] = colony.shortestWay("0", "874");
-
-    std::ofstream file("of.txt");
-    for (size_t i = 0; i < lengths.size(); ++i) file << i << " " << lengths[i] << std::endl;
-    file.close();
-
-    std::cout << "shortest path found by ACO: ";
-    for (Node* node : way2.nodes) std::cout << node->getName() << " ";
-    std::cout << "\nlength: " << way2.length << '\n' << std::endl;
 
     return 0;
 }
