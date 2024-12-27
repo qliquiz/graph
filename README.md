@@ -1,6 +1,3 @@
-```
-clang++ -std=c++20 -o main main.cpp ./sources/graph.cpp ./sources/node.cpp ./sources/dijkstra.cpp ./sources/ant.cpp
-```
-```
-./main ./if.txt
-```
+xo.cpp - игра "четыре в ряд"
+папка headers, папка sources и файл main.cpp - структура графа и алгоритм Дейкстры
+ant.cpp - муравьиный алгоритм, ant-vis.py и all_graphs.png - визуализация
